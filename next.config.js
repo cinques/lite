@@ -1,5 +1,3 @@
-require("./env");
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
 

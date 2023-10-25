@@ -1,22 +1,94 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url = "file:./dev.db" // env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Tournament {
+  id Int @id @default(autoincrement())
+  name String
+  events Event[]
+}
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+model Event {
+  id Int @id @default(autoincrement())
+  name String
+  format String // EventFormat
+  matches Match[]
 
-    @@index([name])
+  tournament Tournament @relation(fields: [tournamentId], references: [id])
+  tournamentId Int
+}
+
+// enum EventFormat {
+//   OpenSingles
+//   OpenDoubles
+//   ClassicDoubles
+//   WomenDoubles
+// }
+
+model Match {
+  id Int @id @default(autoincrement())
+  format String // MatchFormat
+  games Game[]
+  
+  team1 Team @relation("Team1", fields: [team1Id], references: [id])
+  team1Id Int
+  
+  team2 Team @relation("Team2", fields: [team2Id], references: [id])
+  team2Id Int
+
+  event Event @relation(fields: [eventId], references: [id])
+  eventId Int
+}
+
+// enum MatchFormat {
+//   F1
+//   F7
+//   F10
+//   BO3
+//   BO5
+// }
+
+model Team {
+  id Int @id @default(autoincrement())
+  name String?
+  country String?
+  players TeamPlayer[]
+
+  matchesAsTeam1 Match[] @relation("Team1")
+  matchesAsTeam2 Match[] @relation("Team2")
+}
+
+model Game {
+  id Int @id @default(autoincrement())
+  score1 Int
+  score2 Int
+
+  match Match @relation(fields: [matchId], references: [id])
+  matchId Int
+  // players1 Player[] @relation("Players1", references: [id])
+  // players2 Player[] @relation("Players2", references: [id])
+}
+
+
+model Player {
+  id Int @id @default(autoincrement())
+  name String
+  teams TeamPlayer[]
+  // matches Match[]
+}
+
+model TeamPlayer {
+  team Team @relation(fields: [teamId], references: [id])
+  teamId Int
+  player Player @relation(fields: [playerId], references: [id])
+  playerId   Int
+
+  @@id([teamId, playerId])
 }
 
 // Necessary for Next auth
@@ -54,7 +126,6 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
 }
 
 model VerificationToken {
