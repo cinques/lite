@@ -1,3 +1,4 @@
+import { ClientComponent } from "@/components/ClientComponent";
 import { getMatches, getTournaments } from "@/server/queries";
 
 export default async function Home() {
@@ -23,6 +24,7 @@ export default async function Home() {
           </div>
         ))}
       </div>
+      <ClientComponent />
     </div>
   );
 }
