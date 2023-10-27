@@ -6,7 +6,7 @@ export default async function Home() {
   const matches = await getMatches(1);
 
   return (
-    <div>
+    <div className="flex h-screen flex-col items-center justify-center">
       Hello world
       <div>
         {tournaments.map((tournament) => (

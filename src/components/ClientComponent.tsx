@@ -13,7 +13,7 @@ export function ClientComponent() {
 }
 
 function Some() {
-  const { isLoading, data, error } = r.playerTournaments.useQuery({
+  const { isLoading, data, error } = r.player.tournaments.useQuery({
     params: { id: "1" },
   });
 
