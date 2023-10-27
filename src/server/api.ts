@@ -1,6 +1,6 @@
 import { createRouter } from "@restype/core";
 import { contract } from "@/utils/contract";
-import { getTournaments } from "@/server/queries";
+import { getTournaments, getMatches } from "@/server/queries";
 
 const createContext = () => void 0;
 
@@ -14,10 +14,13 @@ export const router = createRouter(contract, createContext, {
         body: tournaments,
       };
     },
-    matches: async () => {
+    matches: async ({ params }) => {
+      const playerId = parseInt(params.id);
+      const mathces = await getMatches(playerId);
+
       return {
         status: 200,
-        body: [{}],
+        body: mathces,
       };
     },
   },
